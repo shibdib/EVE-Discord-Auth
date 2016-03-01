@@ -49,7 +49,44 @@ $app->get("/auth/", function() use ($app, $config) {
 
     // Now check if the person is in a corp or alliance on the blue / allowed list
     // Whatever ID matches whatever group, they get added to. Discord role ordering decides what they can and can't see
-    echo "yay, it all worked - now we just gotta do all the checks, and then generate you an invite for discord, and setup an auth string";
+    $access = array();
+    $allowances = $config["groups"];
+    foreach($allowances as $groupName => $groupData) {
+        foreach($groupData as $type => $id) {
+            switch($type) {
+                case "character":
+                    if($id == $characterID)
+                        $access[] = $groupName;
+                    break;
+
+                case "corporation":
+                    if($id == $corporationID)
+                        $access[] = $groupName;
+                    break;
+
+                case "alliance":
+                    if($id == $allianceID)
+                        $access[] = $groupName;
+                    break;
+            }
+        }
+    }
+
+    // Generate an invite link
+    $discord = new \Discord\Discord($config["discord"]["email"], $config["discord"]["pass"]);
+    $inviteData = $discord->api("channel")->invites()->create($config["discord"]["inviteChannel"], 60 * (mt_rand(1, 500) + 30), 1);
+    $inviteLink = "https://discord.gg/" . $inviteData["code"];
+
+    // Make the json access list
+    $accessList = json_encode($access);
+
+    // Generate an auth string
+    $authString = uniqid();
+
+    // Insert it all into the db
+    dbExecute("REPLACE INTO registrations (characterID, corporationID, allianceID, groups, authString, active) VALUES (:characterID, :corporationID, :allianceID, :groups, :authString, 1)", array(":characterID" => $characterID, ":corporationID" => $corporationID, ":allianceID" => $allianceID, ":groups" => $accessList, ":authString" => $authString));
+
+    $app->render("authed.twig", array("inviteLink" => $inviteLink, "authString" => $authString));
 });
 
 $app->run();
