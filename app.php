@@ -17,7 +17,7 @@ foreach(glob(BASEDIR . "/libraries/*.php") as $lib)
 
 // Routes
 $app->get("/", function() use ($app) {
-    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=http://auth.karbowiak.dk/auth/&client_id=ef14fbdff95c4a24b5f2dfb20375f34d&scope=publicData"));
+    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=http://discord.mambaonline.org/auth/&client_id=108631eb93084483b2e60d50c7ad507b&scope=publicData"));
 });
 
 $app->get("/auth/", function() use ($app, $config) {
@@ -82,9 +82,12 @@ $app->get("/auth/", function() use ($app, $config) {
 
     // Generate an auth string
     $authString = uniqid();
+	
+	// Set active to yes
+	$active = '1';
 
     // Insert it all into the db
-    dbExecute("REPLACE INTO registrations (characterID, corporationID, allianceID, groups, authString, active) VALUES (:characterID, :corporationID, :allianceID, :groups, :authString, 1)", array(":characterID" => $characterID, ":corporationID" => $corporationID, ":allianceID" => $allianceID, ":groups" => $accessList, ":authString" => $authString));
+    insertUser($config["db"]["url"], $config["db"]["user"], $config["db"]["pass"], $config["db"]["dbname"], $characterID, $corporationID, $allianceID, $accessList, $authString, $active);
 
     $app->render("authed.twig", array("inviteLink" => $inviteLink, "authString" => $authString));
 });
