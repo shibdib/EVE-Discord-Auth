@@ -3,11 +3,26 @@ $config = array();
 
 // CREST
 $config["sso"] = array(
-    "clientID" => "",
-    "secretKey" => ""
+    "clientID" => "", // https://developers.eveonline.com/
+    "secretKey" => "",
+    "callbackURL" => "", // Include trailing /
 );
 
-// Site
+$config["db"] = array(
+    "url" => "",
+    "user" => "",
+    "pass" => "",
+    "dbname" => ""
+);
+
+// Make sure the user has access to the channel, and has allowance to create invites
+$config["discord"] = array(
+    "email" => "",
+    "pass" => "",
+    "inviteChannel" => "" // use your lobby/public channel id
+);
+
+// Site IGNORE EVERYTHING BELOW THIS LINE
 $config["site"] = array(
     "debug" => true,
     "userAgent" => null, // Use pre-defined user agents
@@ -30,22 +45,17 @@ $config["slim"] = array(
     "templates.path" => BASEDIR . "/view/",
 );
 
-// Groups (Keys must match Discord group names, exactly)
-// Inside the name, you must use the types alliance, corporation or character, with an ID for each
+
+
+// IGNORE THIS SECTION FOR NOW!!!
 $config["groups"] = array(
     "Blues" => array(
         //"alliance" => 1234, // an alliance with the id 1234
         //"corporation" => 1234, // a corporation with the id 1234
         //"character" => 1234 // a character with the id 1234
     ),
-    "The-Culture" => array(
-        "alliance" => 99005805 // Just the culture alliance, no need to add all corporations
+    "Black Serpent Technologies" => array(
+        "corporation" => "1234" // Example
     )
 );
 
-// Make sure the user has access to the channel, and has allownace to create invites
-$config["discord"] = array(
-    "email" => "",
-    "pass" => "",
-    "inviteChannel" => 154084366409007104
-);

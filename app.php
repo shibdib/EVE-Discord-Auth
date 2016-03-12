@@ -15,9 +15,11 @@ $app->view(new \Slim\Views\Twig());
 foreach(glob(BASEDIR . "/libraries/*.php") as $lib)
     require_once($lib);
 
+
+
 // Routes
-$app->get("/", function() use ($app) {
-    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=http://discord.mambaonline.org/auth/&client_id=108631eb93084483b2e60d50c7ad507b&scope=publicData"));
+$app->get("/", function() use ($app, $config) {
+    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=" . $config['sso']['callbackURL'] . "&client_id=" . $config['sso']['clientID'] . "&scope=publicData"));
 });
 
 $app->get("/auth/", function() use ($app, $config) {
@@ -33,7 +35,6 @@ $app->get("/auth/", function() use ($app, $config) {
     ), array("Authorization: Basic {$base64}")));
 
     $accessToken = $data->access_token;
-    $refreshToken = $data->refresh_token;
 
 
     // Verify Token
@@ -41,8 +42,6 @@ $app->get("/auth/", function() use ($app, $config) {
     $data = json_decode(sendData($verifyURL, array(), array("Authorization: Bearer {$accessToken}")));
 
     $characterID = $data->CharacterID;
-    $characterName = $data->CharacterName;
-    $characterOwnerHash = $data->CharacterOwnerHash;
     $characterData = json_decode(json_encode(new SimpleXMLElement(getData("https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID={$characterID}"))));
     $corporationID = $characterData->result->corporationID;
     $allianceID = $characterData->result->allianceID;
