@@ -5,7 +5,7 @@ $config = array();
 $config["sso"] = array(
     "clientID" => "", // https://developers.eveonline.com/
     "secretKey" => "",
-    "callbackURL" => "", // Include trailing /
+    "callbackURL" => "", // Include trailing / (Will be the url_to_the_index.com/auth/)
 );
 
 $config["db"] = array(
