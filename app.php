@@ -71,10 +71,7 @@ $app->get("/auth/", function() use ($app, $config) {
         }
     }
 
-    // Generate an invite link
-    $discord = new \Discord\Discord($config["discord"]["email"], $config["discord"]["pass"]);
-    $inviteData = $discord->api("channel")->invites()->create($config["discord"]["inviteChannel"], 60 * (mt_rand(1, 500) + 30), 1);
-    $inviteLink = "https://discord.gg/" . $inviteData["code"];
+    $inviteLink = $config["discord"]["inviteLink"];
 
     // Make the json access list
     $accessList = json_encode($access);

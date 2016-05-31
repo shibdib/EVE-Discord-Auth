@@ -15,11 +15,8 @@ $config["db"] = array(
     "dbname" => ""
 );
 
-// Make sure the user has access to the channel, and has allowance to create invites
 $config["discord"] = array(
-    "email" => "",
-    "pass" => "",
-    "inviteChannel" => "" // use your lobby/public channel id
+    "inviteLink" => "" //Make sure it's set to never expire and set to a public channel.
 );
 
 // Site IGNORE EVERYTHING BELOW THIS LINE
