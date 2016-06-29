@@ -44,7 +44,7 @@ $app->get("/auth/", function() use ($app, $config) {
     $characterID = $data->CharacterID;
     $characterData = json_decode(json_encode(new SimpleXMLElement(getData("https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID={$characterID}"))));
     $corporationID = $characterData->result->corporationID;
-    if (!isset($characterData->result->allianceID)) { $allianceID = 0; } else { $allianceID = $characterData->result->allianceID; }
+    if (!isset($characterData->result->allianceID)) { $allianceID = 1; } else { $allianceID = $characterData->result->allianceID; }
 
     // Now check if the person is in a corp or alliance on the blue / allowed list
     // Whatever ID matches whatever group, they get added to. Discord role ordering decides what they can and can't see
