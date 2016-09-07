@@ -19,7 +19,7 @@ foreach(glob(BASEDIR . "/libraries/*.php") as $lib)
 
 // Routes
 $app->get("/", function() use ($app, $config) {
-    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=" . $config['sso']['callbackURL'] . "&client_id=" . $config['sso']['clientID'] . "&scope=publicData"));
+    $app->render("index.twig", array("crestURL" => "https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=" . $config['sso']['callbackURL'] . "&client_id=" . $config['sso']['clientID']));
 });
 
 $app->get("/auth/", function() use ($app, $config) {
