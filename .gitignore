@@ -1,5 +1,2 @@
 .idea
-vendor/
-cache/
-config.php
 config/database/auth.sqlite

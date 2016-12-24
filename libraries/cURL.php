@@ -8,33 +8,31 @@ function getData($url)
 {
     try
     {
-        $userAgent = "Discord Auth";
+        $userAgent = 'Discord Auth';
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_USERAGENT, $userAgent);
         curl_setopt($curl, CURLOPT_TIMEOUT, 300);
         curl_setopt($curl, CURLOPT_POST, false);
         curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_ENCODING, '');
         $headers = array();
-        $headers[] = "Connection: keep-alive";
-        $headers[] = "Keep-Alive: timeout=10, max=1000";
+        $headers[] = 'Connection: keep-alive';
+        $headers[] = 'Keep-Alive: timeout=10, max=1000';
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($curl);
-
-        return $result;
+        return curl_exec($curl);
     }
     catch(Exception $e)
     {
-        var_dump("cURL Error: " . $e->getMessage());
+        var_dump('cURL Error: ' . $e->getMessage());
         return null;
     }
 }
 
 function sendData($url, $postData = array(), $headers = array()) {
-    $userAgent = "Discord Auth";
+    $userAgent = 'Discord Auth';
 
     // Define default headers
     if (empty($headers)) {
