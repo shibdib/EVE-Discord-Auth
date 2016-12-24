@@ -55,16 +55,7 @@ $app->get('/auth/', function () use ($app, $config) {
     $authString = uniqid('', true);
 
     // Insert it all into the db
-
-    // Set active to yes
-    $active = '1';
-
-    //check which db you're using
-    if (isset($config["db"]["url"])) {
-        insertUser($config["db"]["url"], $config["db"]["user"], $config["db"]["pass"], $config["db"]["dbname"], $characterID, $corporationID, $allianceID, $authString, $active);
-    }elseif (isset($config['sqlite']['dir'])){
-        insertPending($config, $characterID, $corporationID, $allianceID, $authString);
-    }
+    insertPending($config, $characterID, $corporationID, $allianceID, $authString);
 
     $app->render('authed.twig', array('inviteLink' => $inviteLink, 'authString' => $authString));
 });
