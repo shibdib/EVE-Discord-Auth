@@ -77,9 +77,6 @@ function insertPending($config, $characterID, $corporationID, $allianceID, $auth
 
     // Set active to yes
     $active = '1';
-
-    $query = 'REPLACE INTO pendingUsers (`characterID`, `corporationID`, `allianceID`, `authString`, `active`) VALUES (:characterID,:corporationID,:allianceID,:authString,:active)';
-    $variables = array(':characterID' => $characterID, ':corporationID' => $corporationID, ':allianceID' => $allianceID, ':authString' => $authString, ':active' => $active);
     //Insert
-    dbExecute($query, $dir, $variables);
+    dbExecute('REPLACE INTO pendingUsers (`characterID`, `corporationID`, `allianceID`, `authString`, `active`) VALUES (:characterID,:corporationID,:allianceID,:authString,:active)', $dir, array(':characterID' => $characterID, ':corporationID' => $corporationID, ':allianceID' => $allianceID, ':authString' => $authString, ':active' => $active));
 }
