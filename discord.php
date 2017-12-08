@@ -54,9 +54,9 @@ $response = $GLOBALS['http']->request('GET', '/api/users/@me', [
 
 $responseBody = $response->getBody(true); 
 $response = json_decode($responseBody, true);
-$_SESSION['username'] = $repsonse['username'];
+$_SESSION['username'] = $response['username'];
 $_SESSION['discrim'] = $response['discriminator'];
-$_SESSION['user_id'] = $repsonse['id'];
+$_SESSION['user_id'] = $response['id'];
 $_SESSION['user_avatar'] = $response['avatar'];
 }
 
@@ -85,6 +85,5 @@ function get_guild($id)
 
 $responseBody = $response->getBody(true);
 $response = json_decode($responseBody, true);
-return $reponse;
+return $response;
 }
-?>
