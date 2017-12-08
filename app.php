@@ -25,6 +25,14 @@ $app->get("/", function() use ($app, $config) {
 });
 
 $app->get("/auth/", function() use ($app, $config) {
+    if (isset($_GET['code']) && !isset($_COOKIE["eveCode"])) {
+        $cookie_name = "eveCode";
+        $cookie_value = $_GET['code'];
+        setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+        $url = $config['sso']['callbackURL'];
+        echo '<a href="'.$url.'">Click Me To Continue</a>';
+        return;
+    }
     $provider = new \League\OAuth2\Client\Provider\Discord([
         'clientId'     => $config['discord']['clientId'],
         'clientSecret' => $config['discord']['clientSecret'],
@@ -55,7 +63,7 @@ $app->get("/auth/", function() use ($app, $config) {
 
         $restcord = new DiscordClient(['token' => $config['discord']['botToken']]);
         $restcord->invite->acceptInvite(['invite.code' => $config['discord']['inviteLink']]);
-        $code = $app->request->get("code");
+        $code = $_COOKIE['eveCode'];
         $state = $app->request->get("state");
 
         $tokenURL = "https://login.eveonline.com/oauth/token";
