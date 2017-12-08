@@ -85,39 +85,37 @@ $app->get("/auth/", function() use ($app, $config) {
         // Now check if the person is in a corp or alliance on the blue / allowed list
         // Whatever ID matches whatever group, they get added to. Discord role ordering decides what they can and can't see
         $access = array();
-        $allowances = $config["groups"];
         $roles = $restcord->guild->getGuildRoles(['guild.id' => $config['discord']['guildId']]);
-        foreach ($allowances as $groupName => $groupData) {
-            foreach ($groupData as $type => $id) {
-                switch ($type) {
-                    case "character":
-                        if ($id == $characterID)
-                            $access[] = $groupName;
+        foreach ($config["groups"] as $authGroup) {
+            $id = $authGroup->id;
+            $role = null;
+            if ($id == $characterID) {
+                foreach ($roles as $role) {
+                    if ($role->name == $authGroup->role) {
                         break;
-
-                    case "corporation":
-                        if ($id == $corporationID)
-                            foreach ($roles as $role) {
-                                if ($role->name == $config['discord']['corpRole']) {
-                                    break;
-                                }
-                            }
-                            $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
-                            $access[] = $groupName;
-                        break;
-
-                    case "alliance":
-                        if ($id == $allianceID)
-                            foreach ($roles as $role) {
-                                if ($role->name == $config['discord']['allianceRole']) {
-                                    break;
-                                }
-                            }
-                            $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
-                            $access[] = $groupName;
-                        break;
+                    }
                 }
-            }
+                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+                $access[] = 'character';
+                break;
+            } else if ($id == $allianceID) {
+                foreach ($roles as $role) {
+                    if ($role->name == $authGroup->role) {
+                        break;
+                    }
+                }
+                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+                $access[] = 'alliance';
+                break;
+            } else if ($id == $corporationID)
+                foreach ($roles as $role) {
+                    if ($role->name == $authGroup->role) {
+                        break;
+                    }
+                }
+            if ($role) $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+            $access[] = 'corp';
+            break;
         }
 
         // Make the json access list
