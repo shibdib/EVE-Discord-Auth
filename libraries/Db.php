@@ -25,3 +25,26 @@ function openDB()
 
     return $pdo;
 }
+
+function dbExecute($query, array $params = array())
+{
+    $pdo = openDB();
+    if ($pdo === NULL) {
+        return;
+    }
+
+    // This is ugly, but, yeah..
+    if (strstr($query, ';')) {
+        $explodedQuery = explode(';', $query);
+        $stmt = null;
+        foreach ($explodedQuery as $newQry) {
+            $stmt = $pdo->prepare($newQry);
+            $stmt->execute($params);
+        }
+        $stmt->closeCursor();
+    } else {
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        $stmt->closeCursor();
+    }
+}
