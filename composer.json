@@ -28,6 +28,6 @@
     "filp/whoops": "~1.1.10",
     "restcord/restcord": "dev-master",
     "psecio/oauth2-discord": "dev-master",
-    "thephpleague/oauth2-client": "dev-master"
+    "league/oauth2-client": "dev-master"
   }
 }
