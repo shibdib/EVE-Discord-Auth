@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 
 require_once(BASEDIR . "/config/config.php");
 require_once(BASEDIR . "/vendor/autoload.php");
+include 'discord.php';
 
 use psecio\DiscordClient;
 
@@ -40,31 +41,20 @@ $app->get("/auth/", function() use ($app, $config) {
     ]);
     if (!isset($_GET['code'])) {
         // If we don't have a code yet, we need to make the link
-        $provider->addScopes(['guilds.join']);
-        $discordLink = $provider->getAuthorizationUrl();
+        $provider->addScopes(['guilds.join', 'identify']);
+        $scopes = 'guilds.join%20identify%20guilds';
+        $discordLink = url($config['discord']['clientId'],$config['discord']['redirectUri'],$scopes);
         $app->render("discord.twig", array("discordLink" => $discordLink));
 
     } else {
         // If we do have a code, use it to get a token
-        $accessToken = $provider->getAccessToken('authorization_code', [
-            'code' => $_GET['code']
-        ]);
-
-        $user = $provider->getResourceOwner($accessToken);
-
-        /**
-         * User object contains:
-         * - username
-         * - verified
-         * - mfa_enabled
-         * - id
-         * - avatar
-         */
+        init($_GET['code'],$config['discord']['redirectUri'],$config['discord']['clientId'],$config['discord']['clientSecret']);
+        get_user();
+        $guilds = get_guilds();
 
         $restcord = new DiscordClient(['token' => $config['discord']['botToken']]);
         $restcord->invite->acceptInvite(['invite.code' => $config['discord']['inviteLink']]);
         $code = $_COOKIE['eveCode'];
-        $state = $app->request->get("state");
 
         $tokenURL = "https://login.eveonline.com/oauth/token";
         $base64 = base64_encode($config["sso"]["clientID"] . ":" . $config["sso"]["secretKey"]);
@@ -103,7 +93,7 @@ $app->get("/auth/", function() use ($app, $config) {
                         break;
                     }
                 }
-                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $_SESSION['user_id'], 'role.id' => $role->id]);
                 $access[] = 'character';
                 break;
             } else if ($id == $allianceID) {
@@ -112,7 +102,7 @@ $app->get("/auth/", function() use ($app, $config) {
                         break;
                     }
                 }
-                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+                $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $_SESSION['user_id'], 'role.id' => $role->id]);
                 $access[] = 'alliance';
                 break;
             } else if ($id == $corporationID)
@@ -121,7 +111,7 @@ $app->get("/auth/", function() use ($app, $config) {
                         break;
                     }
                 }
-            if ($role) $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $user->id, 'role.id' => $role->id]);
+            if ($role) $restcord->guild->addGuildMemberRole(['guild.id' => $config['discord']['guildId'], 'user.id' => $_SESSION['user_id'], 'role.id' => $role->id]);
             $access[] = 'corp';
             break;
         }
