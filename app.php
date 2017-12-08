@@ -31,7 +31,7 @@ $app->get("/auth/", function() use ($app, $config) {
         $cookie_value = $_GET['code'];
         setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
         $url = $config['sso']['callbackURL'];
-        echo '<a href="'.$url.'">Click Me To Continue</a>';
+        echo "<head><meta http-equiv='refresh' content='0; url=$url' /></head>";
         return;
     }
     $provider = new \League\OAuth2\Client\Provider\Discord([
