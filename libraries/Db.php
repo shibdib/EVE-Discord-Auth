@@ -1,15 +1,27 @@
 <?php
 
-function insertUser($db, $user, $pass, $dbName, $characterID, $corporationID, $allianceID, $groups, $authString, $active)
+function insertUser($characterID, $discordID, $accessList)
 {
+    dbExecute('REPLACE INTO authed (`characterID`, `discordID`, `groups`) VALUES (:characterID,:discordID,:groups)', array(':characterID' => $characterID, ':discordID' => $discordID, ':groups' => $accessList));
+    return null;
+}
 
-    $conn = new mysqli($db, $user, $pass, $dbName);
+function openDB()
+{
+    $db = __DIR__ . '/../config/database/auth.sqlite';
 
-    $sql = "INSERT INTO pendingUsers (characterID, corporationID, allianceID, groups, authString, active) VALUES ('$characterID','$corporationID','$allianceID','$groups','$authString','$active')";
-
-    if ($conn->query($sql) === TRUE) {
-        return null;
-    } else {
-        return null;
+    $dsn = "sqlite:$db";
+    try {
+        $pdo = new PDO($dsn, '', '', array(
+                PDO::ATTR_PERSISTENT => false,
+                PDO::ATTR_EMULATE_PREPARES => true,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            )
+        );
+    } catch (Exception $e) {
+        $pdo = null;
+        return $pdo;
     }
+
+    return $pdo;
 }

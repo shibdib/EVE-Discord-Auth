@@ -16,7 +16,22 @@ $config["db"] = array(
 );
 
 $config["discord"] = array(
-    "inviteLink" => "" //Make sure it's set to never expire and set to a public channel.
+    "guildId" => 12345, //Get the guild ID for your discord server
+    "inviteLink" => "", //Make sure it's set to never expire and set to a public channel.
+    "botToken" => "", //Must be the firetail bot in your server
+    "clientId" => "", //Must be the firetail bot in your server
+    "clientSecret" => "", //Must be the firetail bot in your server
+);
+
+$config["groups"] = array(
+    "group1" => array(
+        "id" => "1234", // Corp/Alliance/Player ID
+        "role" => "" //Role Name
+    ),
+    "group2" => array(
+        "id" => "1234", // Corp/Alliance/Player ID
+        "role" => "" //Role Name
+    ),
 );
 
 // Site IGNORE EVERYTHING BELOW THIS LINE
@@ -40,19 +55,5 @@ $config["slim"] = array(
     "debug" => $config["site"]["debug"],
     "cookies.secret_key" => $config["cookies"]["secret"],
     "templates.path" => BASEDIR . "/view/",
-);
-
-
-
-// IGNORE THIS SECTION FOR NOW!!!
-$config["groups"] = array(
-    "Blues" => array(
-        //"alliance" => 1234, // an alliance with the id 1234
-        //"corporation" => 1234, // a corporation with the id 1234
-        //"character" => 1234 // a character with the id 1234
-    ),
-    "Black Serpent Technologies" => array(
-        "corporation" => "1234" // Example
-    )
 );
 
