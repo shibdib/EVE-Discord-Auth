@@ -8,7 +8,7 @@ function insertUser($characterID, $discordID, $accessList)
 
 function openDB()
 {
-    $db = __DIR__ . '/../config/database/auth.sqlite';
+    $db = __DIR__ . '/database/auth.sqlite';
 
     $dsn = "sqlite:$db";
     try {
