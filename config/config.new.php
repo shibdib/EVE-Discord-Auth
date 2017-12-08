@@ -16,7 +16,11 @@ $config["db"] = array(
 );
 
 $config["discord"] = array(
-    "inviteLink" => "" //Make sure it's set to never expire and set to a public channel.
+    "inviteLink" => "", //Make sure it's set to never expire and set to a public channel.
+    "botToken" => "", //Can use the Firetail Token Here or Create a New Bot App
+    "clientId" => "", //Cannot be the bot
+    "clientSecret" => "", //Cannot be the bot
+    "redirectUri" => "" //(Will be the url_to_the_index.com/auth/)
 );
 
 // Site IGNORE EVERYTHING BELOW THIS LINE
